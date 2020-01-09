@@ -3,13 +3,19 @@ const server = require("http").createServer(app);
 const socket = require("socket.io");
 const io = socket(server);
 
-const port = 8080 || process.env.PORT;
+const port = 8081 || process.env.PORT;
 
 io.on("connection", (cnxInfo) => {
   console.info("CONNECTION!!!");
   console.log(cnxInfo)
   console.log('// - - - - - //')
 });
+
+io.on("disconnect", cnxn => {
+	console.log('------DISCONNECTED cnxn------')
+	console.log(cnxn)
+	
+})
 
 setInterval(() => {
   const temp = Math.floor(Math.random() * 100);
