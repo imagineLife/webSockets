@@ -3,18 +3,29 @@ const server = require("http").createServer(app);
 const socket = require("socket.io");
 const io = socket(server);
 
+const { mapEventsAndHandlers } =  require('./helpers')
+const { evAHandler, evBHandler } = require('./handlers');
+
 const port = 8081 || process.env.PORT;
 
-io.on("connection", (cnxInfo) => {
+let events = [
+	{evA: evAHandler},
+	{evB: evBHandler}
+]
+
+
+io.on("connection", (connectedSocket) => {
   console.info("CONNECTION!!!");
-  console.log(cnxInfo)
+  console.log(connectedSocket)
   console.log('// - - - - - //')
+
+	events.map(e => mapEventsAndHandlers(e, connectedSocket))
+
 });
 
 io.on("disconnect", cnxn => {
 	console.log('------DISCONNECTED cnxn------')
 	console.log(cnxn)
-	
 })
 
 setInterval(() => {
